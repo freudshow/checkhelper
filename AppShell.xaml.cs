@@ -1,0 +1,10 @@
+﻿namespace CheckHelper
+{
+    public partial class AppShell : Shell
+    {
+        public AppShell()
+        {
+            InitializeComponent();
+        }
+    }
+}
