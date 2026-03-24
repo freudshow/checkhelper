@@ -4,11 +4,27 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CheckHelper"
+    xmlns:pages="clr-namespace:CheckHelper.Pages"
     Title="CheckHelper">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent
+            Title="校验助手"
+            Icon="dotnet_bot.png"
+            ContentTemplate="{DataTemplate pages:CheckHelper}"
+            Route="CheckHelper" />
+
+        <ShellContent
+            Title="串口调试助手"
+            Icon="dotnet_bot.png"
+            ContentTemplate="{DataTemplate pages:SerialPortPage}"
+            Route="SerialPortPage" />
+
+        <ShellContent
+            Title="网络调试助手"
+            Icon="dotnet_bot.png"
+            ContentTemplate="{DataTemplate pages:NetworkDebugPage}"
+            Route="NetworkDebugPage" />
+    </TabBar>
 
 </Shell>
