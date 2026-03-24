@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CheckHelper.Pages.CheckHelper2">
+
+    <Grid RowSpacing="12" ColumnSpacing="12" Padding="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" /> <!-- 输入区 -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1.2*" /> <!-- 选项区 -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 输入大区 -->
+        <Frame Grid.Row="0" BorderColor="#C0392B" CornerRadius="6" Padding="8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Label Text="报文区 (16进制，字节用2个字符表示，字节间可用空格/换行等分隔)" FontAttributes="Bold" />
+                <Editor x:Name="InputEditor" Grid.Row="1" AutoSize="TextChanges" HeightRequest="220" />
+            </Grid>
+        </Frame>
+
+        <!-- 结果区 与 操作按钮 -->
+        <Frame Grid.Row="1" Grid.ColumnSpan="2" BorderColor="#C0392B" CornerRadius="6" Padding="8">
+            <Editor x:Name="ResultEditor" AutoSize="TextChanges" HeightRequest="80" IsReadOnly="True" />
+        </Frame>
+
+        <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="End" Spacing="12">
+            <Button Text="清空输入" BackgroundColor="#7D3C98" TextColor="White" Clicked="OnClearInput" />
+            <Button Text="复制" BackgroundColor="#7D3C98" TextColor="White" Clicked="OnCopyResult" />
+        </StackLayout>
+
+        <!-- 选项区 -->
+        <Frame Grid.Row="3" CornerRadius="4" BorderColor="#5B2C6F" Padding="8">
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- 校验选项 -->
+                <StackLayout Grid.Column="0" Spacing="8">
+                    <Label Text="校验" BackgroundColor="#7D3C98" TextColor="White" Padding="6" />
+                    <Grid ColumnSpacing="12" RowSpacing="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <RadioButton x:Name="rbCRC16" Content="CRC16" Grid.Row="0" Grid.Column="0" />
+                        <RadioButton x:Name="rbCheckSum" Content="CheckSum" Grid.Row="0" Grid.Column="1" IsChecked="True" />
+                        <RadioButton x:Name="rbPlus0x33" Content="+0x33" Grid.Row="0" Grid.Column="2" />
+                        <RadioButton x:Name="rbASCII" Content="ASCII" Grid.Row="0" Grid.Column="3" />
+
+                        <RadioButton x:Name="rbFCS16" Content="FCS16" Grid.Row="1" Grid.Column="0" />
+                        <RadioButton x:Name="rbXORSum" Content="XORSum" Grid.Row="1" Grid.Column="1" />
+                        <RadioButton x:Name="rbMinus0x33" Content="-0x33" Grid.Row="1" Grid.Column="2" />
+                        <RadioButton x:Name="rbInverse" Content="Inverse" Grid.Row="1" Grid.Column="3" />
+                    </Grid>
+                </StackLayout>
+
+                <!-- 数据转换 -->
+                <StackLayout Grid.Column="1" Spacing="8">
+                    <Label Text="数据转换" BackgroundColor="#7D3C98" TextColor="White" Padding="6" />
+                    <Grid ColumnSpacing="12" RowSpacing="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <RadioButton x:Name="rbFloat" Content="Float" Grid.Row="0" Grid.Column="0" />
+                        <RadioButton x:Name="rbU32" Content="U32" Grid.Row="0" Grid.Column="1" />
+                        <RadioButton x:Name="rbS32" Content="S32" Grid.Row="0" Grid.Column="2" />
+
+                        <RadioButton x:Name="rbDouble" Content="Double" Grid.Row="1" Grid.Column="0" />
+                        <RadioButton x:Name="rbU16" Content="U16" Grid.Row="1" Grid.Column="1" />
+                        <RadioButton x:Name="rbS16" Content="S16" Grid.Row="1" Grid.Column="2" />
+                    </Grid>
+                </StackLayout>
+            </Grid>
+        </Frame>
+
+        <Button Grid.Row="4" Text="计算" BackgroundColor="#7D3C98" TextColor="White" Clicked="OnCalculate" HorizontalOptions="End" />
+    </Grid>
+
+</ContentPage>
