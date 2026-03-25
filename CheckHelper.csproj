@@ -62,16 +62,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\checkHelper.xaml.cs">
+	  <Compile Update="Pages\CheckHelper.xaml.cs">
 	    <DependentUpon>CheckHelper.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="Pages\CheckHelper.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\CheckHelper2.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\NetworkDebugPage.xaml">

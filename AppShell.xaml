@@ -11,7 +11,7 @@
         <ShellContent
             Title="校验助手"
             Icon="dotnet_bot.png"
-            ContentTemplate="{DataTemplate pages:CheckHelper2}"
+            ContentTemplate="{DataTemplate pages:CheckHelper}"
             Route="CheckHelper" />
 
         <ShellContent
