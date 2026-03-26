@@ -105,11 +105,7 @@
                 </StackLayout>
             </Grid>
         </Frame>
-
-        <Button Grid.Row="4" Text="计算"
-                BackgroundColor="#7D3C98" TextColor="White"
-                Clicked="OnCalculate" />
-        <Label Grid.Row="5" x:Name="TextBlock_Hint"
+        <Label Grid.Row="4" x:Name="TextBlock_Hint"
                FontAttributes="Bold"
                MinimumHeightRequest="40" />
     </Grid>
