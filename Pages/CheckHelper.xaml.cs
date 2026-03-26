@@ -37,11 +37,13 @@ namespace CheckHelper.Pages
 
         private void InputEditor_TextChanged(object sender, EventArgs e)
         {
-            if (PrepareInputString(InputEditor.Text, out m_frameString, out m_InputByte))
+            if (PrepareInputString(InputEditor.Text, out m_frameString, out m_InputByte, out m_IsInputValid))
             {
                 InputEditor.Text = m_frameString;
                 CalcSum();
             }
+
+            DisplayBytes();
         }
 
         private void CalcSum()
@@ -59,16 +61,20 @@ namespace CheckHelper.Pages
             if (m_CalcFunctions.Keys.Contains(m_CurrentRadio))
             {
                 ResultEditor.Text = m_CalcFunctions[m_CurrentRadio]();
-                if (m_IsInputValid)
-                {
-                    TextBlock_Hint.BackgroundColor = new Color(0, 1, 0);
-                    TextBlock_Hint.Text = $"{m_InputByte.Length} 字节";
-                }
-                else
-                {
-                    TextBlock_Hint.BackgroundColor = new Color(1, 0, 0);
-                    TextBlock_Hint.Text = "格式错误";
-                }
+            }
+        }
+
+        private void DisplayBytes()
+        {
+            if (m_IsInputValid && m_InputByte != null)
+            {
+                TextBlock_Hint.TextColor = Colors.Green;
+                TextBlock_Hint.Text = $"{m_InputByte.Length} 字节";
+            }
+            else
+            {
+                TextBlock_Hint.TextColor = Colors.Red;
+                TextBlock_Hint.Text = "格式错误";
             }
         }
 
@@ -88,70 +94,13 @@ namespace CheckHelper.Pages
 
         private void OnCalculate(object? sender, EventArgs e)
         {
-            if (!PrepareInputString(InputEditor.Text, out string _, out byte[]? bytes))
+            if (PrepareInputString(InputEditor.Text, out string _, out byte[]? bytes, out m_IsInputValid))
             {
+                CalcSum();
                 return;
             }
 
-            if (bytes == null || bytes.Length == 0)
-            {
-                ResultEditor.Text = "无法解析输入为16进制字节。请粘贴 2 位十六进制字节，用空格或换行分隔。";
-                return;
-            }
-
-            // 校验逻辑
-            if (rbCheckSum.IsChecked)
-            {
-                int sum = 0;
-                foreach (var b in bytes) sum += b;
-                ResultEditor.Text = $"CheckSum: 0x{(sum & 0xFF):X2}";
-                return;
-            }
-
-            if (rbXORSum.IsChecked)
-            {
-                int x = 0;
-                foreach (var b in bytes) x ^= b;
-                ResultEditor.Text = $"XORSum: 0x{x:X2}";
-                return;
-            }
-
-            if (rbPlus0x33.IsChecked)
-            {
-                var outBytes = bytes.Select(b => (byte)((b + 0x33) & 0xFF)).ToArray();
-                ResultEditor.Text = "加0x33 后: " + string.Join(' ', outBytes.Select(b => b.ToString("X2")));
-                return;
-            }
-
-            if (rbMinus0x33.IsChecked)
-            {
-                var outBytes = bytes.Select(b => (byte)((b - 0x33) & 0xFF)).ToArray();
-                ResultEditor.Text = "减0x33 后: " + string.Join(' ', outBytes.Select(b => b.ToString("X2")));
-                return;
-            }
-
-            if (rbASCII.IsChecked)
-            {
-                try
-                {
-                    var s = System.Text.Encoding.ASCII.GetString(bytes);
-                    ResultEditor.Text = "ASCII: " + s;
-                }
-                catch
-                {
-                    ResultEditor.Text = "无法将字节转换为 ASCII。";
-                }
-                return;
-            }
-
-            // 未实现/占位
-            if (rbCRC16.IsChecked || rbFCS16.IsChecked || rbInverse.IsChecked)
-            {
-                ResultEditor.Text = "所选算法尚未实现（占位）。";
-                return;
-            }
-
-            ResultEditor.Text = "请选择一个校验或转换选项。";
+            DisplayBytes();
         }
 
         private static readonly byte[] _auchCRCHi = new byte[]//crc高位表
@@ -241,7 +190,7 @@ namespace CheckHelper.Pages
         /// <param name="outputSting">格式化后的正规字符串</param>
         /// <param name="outputByteArray">输出的字节串</param>
         /// <returns>True: 输入的报文字符串格式正确; False: 输入的报文字符串格式错误</returns>
-        public static bool PrepareInputString(string inputString, out string outputSting, out byte[]? outputByteArray)
+        public static bool PrepareInputString(string inputString, out string outputSting, out byte[]? outputByteArray, out bool isInputValid)
         {
             List<byte> list = new List<byte>();
             string s = inputString;
@@ -286,10 +235,12 @@ namespace CheckHelper.Pages
             if (matched)
             {
                 outputByteArray = list.ToArray();
+                isInputValid = true;
             }
             else
             {
                 outputByteArray = null;
+                isInputValid = false;
             }
 
             outputSting = outputSting.Trim();
@@ -325,6 +276,11 @@ namespace CheckHelper.Pages
 
         private string CalcFCS16()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             ushort crc = FCS16(m_InputByte);
             byte[] b = BitConverter.GetBytes(crc);
             m_IsInputValid = true;
@@ -333,6 +289,11 @@ namespace CheckHelper.Pages
 
         private string CalcAdd33()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             byte[] b = new byte[m_InputByte.Length];
             Array.Copy(m_InputByte, b, b.Length);
 
@@ -343,6 +304,11 @@ namespace CheckHelper.Pages
 
         private string CalcMinus33()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             byte[] b = new byte[m_InputByte.Length];
             Array.Copy(m_InputByte, b, b.Length);
             Minus33(b);
@@ -352,6 +318,11 @@ namespace CheckHelper.Pages
 
         private string CalcInverse()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             byte[] b = new byte[m_InputByte.Length];
             Array.Copy(m_InputByte, b, b.Length);
             InverseArray(b);
@@ -361,6 +332,11 @@ namespace CheckHelper.Pages
 
         private string CalcChkSum()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             uint sum = ChkSum(m_InputByte);
             byte[] l = BitConverter.GetBytes(sum);
             m_IsInputValid = true;
@@ -369,6 +345,11 @@ namespace CheckHelper.Pages
 
         private string CalcXORSum()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             byte[] l = new byte[1];
             l[0] = XORSum(m_InputByte);
             m_IsInputValid = true;
@@ -377,6 +358,11 @@ namespace CheckHelper.Pages
 
         private string CalcASCII()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             byte[] l = new byte[m_InputByte.Length];
             Array.Copy(m_InputByte, l, l.Length);
 
@@ -387,6 +373,11 @@ namespace CheckHelper.Pages
 
         private string CalcFloat()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             if (m_InputByte.Length != 4)
             {
                 TextBlock_Hint.Text = "格式错误";
@@ -400,6 +391,11 @@ namespace CheckHelper.Pages
 
         private string CalcDouble()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             if (m_InputByte.Length != 8)
             {
                 m_IsInputValid = false;
@@ -413,6 +409,11 @@ namespace CheckHelper.Pages
 
         private string CalcU16()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             if (m_InputByte.Length != 2)
             {
                 m_IsInputValid = false;
@@ -426,6 +427,11 @@ namespace CheckHelper.Pages
 
         private string CalcU32()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             if (m_InputByte.Length != 4)
             {
                 m_IsInputValid = false;
@@ -439,6 +445,11 @@ namespace CheckHelper.Pages
 
         private string CalcS16()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             if (m_InputByte.Length != 2)
             {
                 m_IsInputValid = false;
@@ -452,6 +463,11 @@ namespace CheckHelper.Pages
 
         private string CalcS32()
         {
+            if (m_InputByte == null)
+            {
+                return "NULL Buffer";
+            }
+
             if (m_InputByte.Length != 4)
             {
                 m_IsInputValid = false;

@@ -1,14 +1,85 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CheckHelper.Pages.NetworkDebugPage">
+             x:Class="CheckHelper.Pages.NetworkDebugPage"
+             BackgroundColor="White">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="12">
-            <Label Text="网络调试助手" FontAttributes="Bold" FontSize="18" />
-            <Label Text="此页面用于网络调试（占位 UI）。" />
-            <Button Text="开始监听" />
-        </VerticalStackLayout>
-    </ScrollView>
+    <Grid Padding="8" ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- 左侧设置 -->
+        <ScrollView Grid.Column="0">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="网络设置" FontAttributes="Bold" />
+
+                <Label Text="协议类型" />
+                <Picker x:Name="ProtocolPicker">
+                    <Picker.ItemsSource>
+                        <x:Array Type="x:String">
+                            <x:String>TCP Server</x:String>
+                            <x:String>TCP Client</x:String>
+                            <x:String>UDP</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+
+                <Label Text="本地主机地址" />
+                <Entry x:Name="IpEntry" Placeholder="0.0.0.0" />
+
+                <Label Text="本地主机端口" />
+                <Entry x:Name="PortEntry" Keyboard="Numeric" Placeholder="8080" />
+
+                <HorizontalStackLayout Spacing="8">
+                    <Button x:Name="OpenButton" Text="打开" HorizontalOptions="FillAndExpand" />
+                    <Button x:Name="CloseButton" Text="关闭" HorizontalOptions="FillAndExpand" />
+                </HorizontalStackLayout>
+
+                <BoxView HeightRequest="1" Color="#DDD" />
+
+                <Label Text="接收设置" FontAttributes="Bold" />
+                <Label Text="显示格式" />
+                <Picker x:Name="EncodingPicker">
+                    <Picker.ItemsSource>
+                        <x:Array Type="x:String">
+                            <x:String>ASCII</x:String>
+                            <x:String>HEX</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+
+                <CheckBox x:Name="AutoScrollCheck" IsChecked="True" />
+                <Label Text="自动滚动日志" VerticalOptions="Center" />
+
+                <BoxView HeightRequest="1" Color="#DDD" />
+
+                <Label Text="发送设置" FontAttributes="Bold" />
+                <Label Text="自动解析十六进制请在发送框中输入空格分隔的 HEX（如: 01 02 0A）" FontSize="10" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- 右侧日志与发送区 -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="140" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0" Padding="4" BorderColor="#CCC">
+                <ListView x:Name="LogListView" HasUnevenRows="True" />
+            </Frame>
+
+            <VerticalStackLayout Grid.Row="1" Spacing="6">
+                <Label x:Name="StatusLabel" Text="Ready" FontSize="12" />
+                <Editor x:Name="SendEntry" HeightRequest="80" AutoSize="TextChanges" />
+                <HorizontalStackLayout Spacing="8">
+                    <Button x:Name="SendButton" Text="发送" HorizontalOptions="End" />
+                    <Button x:Name="ClearLogButton" Text="清除日志" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
 
 </ContentPage>
