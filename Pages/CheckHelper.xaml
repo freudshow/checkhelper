@@ -5,14 +5,14 @@
 
     <Grid RowSpacing="12" ColumnSpacing="12" Padding="12">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
             <!-- 输入区 -->
+            <RowDefinition Height="2*" />
+            <!-- 结果区 -->
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="1.2*" />
             <!-- 选项区 -->
-            <RowDefinition Height="1.2*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="200" />
+            <!-- 字节数区 -->
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
         <!-- 输入大区 -->
@@ -33,18 +33,31 @@
         </Grid>
 
         <!-- 结果区 与 操作按钮 -->
-        <Frame Grid.Row="1" Grid.ColumnSpan="2" BorderColor="#C0392B" CornerRadius="6" Padding="8">
-            <Editor x:Name="ResultEditor" AutoSize="TextChanges" HeightRequest="80" IsReadOnly="True" />
-        </Frame>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Padding="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="230" />
+            </Grid.ColumnDefinitions>
 
-        <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="End" Spacing="12">
-            <Button Text="清空输入" BackgroundColor="#7D3C98" TextColor="White" Clicked="OnClearInput" />
-            <Button Text="复制" BackgroundColor="#7D3C98" TextColor="White" Clicked="OnCopyResult" />
-        </StackLayout>
+            <Editor Grid.Column="0" x:Name="ResultEditor" AutoSize="TextChanges" HeightRequest="80" IsReadOnly="True" />
+
+            <Grid Grid.Column="1" HorizontalOptions="End" Margin="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Text="清空输入" BackgroundColor="#7D3C98" TextColor="White" Clicked="OnClearInput" Margin="10" />
+                <Button Grid.Column="1" Text="复制" BackgroundColor="#7D3C98" TextColor="White" Clicked="OnCopyResult" Margin="10" />
+            </Grid>
+        </Grid>
 
         <!-- 选项区 -->
-        <Frame Grid.Row="3" CornerRadius="4" BorderColor="#5B2C6F" Padding="8">
-            <Grid ColumnSpacing="12">
+        <Border Grid.Row="2" Padding="8" Stroke="#5B2C6F" StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="4" />
+            </Border.StrokeShape>
+
+            <Grid ColumnSpacing="12" RowSpacing="8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -104,8 +117,8 @@
                     </Grid>
                 </StackLayout>
             </Grid>
-        </Frame>
-        <Label Grid.Row="4" x:Name="TextBlock_Hint"
+        </Border>
+        <Label Grid.Row="3" x:Name="TextBlock_Hint"
                FontAttributes="Bold"
                MinimumHeightRequest="40" />
     </Grid>
