@@ -17,23 +17,21 @@
 
                 <Label Text="协议类型" />
                 <Picker x:Name="ProtocolPicker">
-                    <Picker.ItemsSource>
-                        <x:Array Type="x:String">
-                            <x:String>TCP Server</x:String>
-                            <x:String>TCP Client</x:String>
-                            <x:String>UDP</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
+                    <Picker.Items>
+                        <x:String>TCP Server</x:String>
+                        <x:String>TCP Client</x:String>
+                        <x:String>UDP</x:String>
+                    </Picker.Items>
                 </Picker>
 
-                <Label Text="本地主机地址" />
+                <Label Text="主机地址" />
                 <Entry x:Name="IpEntry" Placeholder="0.0.0.0" />
 
-                <Label Text="本地主机端口" />
+                <Label Text="端口" />
                 <Entry x:Name="PortEntry" Keyboard="Numeric" Placeholder="8080" />
 
                 <HorizontalStackLayout Spacing="8">
-                    <Button x:Name="OpenButton" Text="打开" HorizontalOptions="FillAndExpand" />
+                    <Button x:Name="OpenButton" Text="打开"  HorizontalOptions="FillAndExpand" />
                     <Button x:Name="CloseButton" Text="关闭" HorizontalOptions="FillAndExpand" />
                 </HorizontalStackLayout>
 
@@ -42,12 +40,10 @@
                 <Label Text="接收设置" FontAttributes="Bold" />
                 <Label Text="显示格式" />
                 <Picker x:Name="EncodingPicker">
-                    <Picker.ItemsSource>
-                        <x:Array Type="x:String">
-                            <x:String>ASCII</x:String>
-                            <x:String>HEX</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
+                    <Picker.Items>
+                        <x:String>ASCII</x:String>
+                        <x:String>HEX</x:String>
+                    </Picker.Items>
                 </Picker>
 
                 <CheckBox x:Name="AutoScrollCheck" IsChecked="True" />
@@ -81,5 +77,4 @@
             </VerticalStackLayout>
         </Grid>
     </Grid>
-
 </ContentPage>

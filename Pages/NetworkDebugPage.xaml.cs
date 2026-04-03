@@ -12,15 +12,15 @@ namespace CheckHelper.Pages
 {
     public partial class NetworkDebugPage : ContentPage
     {
-        ObservableCollection<string> Logs = new();
+        private ObservableCollection<string> Logs = new();
 
-        CancellationTokenSource? _cts;
+        private CancellationTokenSource? _cts;
 
-        TcpListener? _tcpListener;
-        readonly List<TcpClient> _clients = new();
+        private TcpListener? _tcpListener;
+        private readonly List<TcpClient> _clients = new();
 
-        TcpClient? _tcpClient;
-        UdpClient? _udpClient;
+        private TcpClient? _tcpClient;
+        private UdpClient? _udpClient;
 
         public NetworkDebugPage()
         {
@@ -56,7 +56,7 @@ namespace CheckHelper.Pages
             var ipText = string.IsNullOrWhiteSpace(IpEntry.Text) ? "0.0.0.0" : IpEntry.Text.Trim();
             if (!int.TryParse(PortEntry.Text, out var port))
             {
-                await DisplayAlert("端口错误", "请输入有效端口", "OK");
+                await DisplayAlertAsync("端口错误", "请输入有效端口", "OK");
                 return;
             }
 
